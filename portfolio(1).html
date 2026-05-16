@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pushpendra Singh — AI/ML Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --surface: #0d1117;
+    --surface2: #161b27;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.15);
+    --cyan: #4ecdc4;
+    --cyan-dim: rgba(78,205,196,0.12);
+    --text: #e8e4d9;
+    --text-muted: #7a7a8a;
+    --border: rgba(201,168,76,0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Starfield */
+  #stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: var(--op, 0.8); }
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(6,8,16,0.95), transparent);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* Sections */
+  section { position: relative; z-index: 1; }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(78,205,196,0.06) 0%, transparent 50%);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .hero-name em {
+    display: block;
+    color: var(--gold);
+    font-style: italic;
+  }
+  .hero-title {
+    font-size: 1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+  .hero-desc {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1s;
+  }
+  .btn-primary {
+    padding: 0.9rem 2rem;
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    transition: background 0.3s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline {
+    padding: 0.9rem 2rem;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    transition: border-color 0.3s, background 0.3s, transform 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); background: var(--gold-dim); transform: translateY(-2px); }
+
+  /* Hero image side */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.5s;
+  }
+  .hero-photo-frame {
+    position: relative;
+    width: 340px;
+    height: 420px;
+  }
+  .hero-photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, var(--gold), transparent, var(--cyan));
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+    z-index: 0;
+  }
+  .hero-photo {
+    position: absolute;
+    inset: 2px;
+    object-fit: cover;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+    z-index: 1;
+    filter: grayscale(20%);
+  }
+  .hero-badge {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    background: var(--gold);
+    color: var(--bg);
+    padding: 1rem 1.2rem;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    z-index: 2;
+    text-align: center;
+  }
+  .hero-badge .badge-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    white-space: nowrap;
+  }
+  .hero-badge .badge-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    display: block;
+    margin-top: 2px;
+  }
+  .orbit-ring {
+    position: absolute;
+    border: 1px dashed rgba(201,168,76,0.2);
+    border-radius: 50%;
+    animation: orbit 20s linear infinite;
+  }
+  .orbit-ring:nth-child(1) { width: 480px; height: 480px; top: -70px; left: -70px; }
+  .orbit-ring:nth-child(2) { width: 380px; height: 380px; top: -20px; left: -20px; animation-duration: 15s; animation-direction: reverse; }
+  .orbit-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    top: -4px;
+    left: calc(50% - 4px);
+    box-shadow: 0 0 10px var(--gold);
+  }
+  @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* Section common */
+  .section-wrapper {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 6rem 4rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* About */
+  #about { background: var(--surface); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .about-text strong { color: var(--gold); font-weight: 500; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  .skill-tag {
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    transition: border-color 0.3s, color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-tag::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform 0.3s;
+  }
+  .skill-tag:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+  .skill-tag:hover::before { transform: scaleY(1); }
+
+  /* Achievement */
+  #achievement {
+    background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, var(--bg) 50%, rgba(78,205,196,0.05) 100%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .achievement-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4rem;
+    align-items: center;
+    padding: 3rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .achievement-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), var(--cyan));
+  }
+  .achievement-icon {
+    font-size: 5rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.5)); }
+    50% { filter: drop-shadow(0 0 40px rgba(201,168,76,0.9)); }
+  }
+  .achievement-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .achievement-content .year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--cyan);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+  .achievement-content p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 600px;
+  }
+  .achievement-award-photo {
+    margin-top: 3rem;
+    text-align: center;
+  }
+  .achievement-award-photo img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    filter: grayscale(10%) contrast(1.05);
+  }
+  .award-caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Projects */
+  #projects { background: var(--surface); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-dim), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .project-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+  .project-card:hover::after { opacity: 1; }
+  .project-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  .project-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .project-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  .project-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .project-tag {
+    padding: 0.3rem 0.7rem;
+    background: var(--gold-dim);
+    border: 1px solid rgba(201,168,76,0.3);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    cursor: none;
+    position: relative;
+    z-index: 1;
+    transition: gap 0.3s;
+  }
+  .project-link:hover { gap: 0.8rem; }
+
+  /* PDF embed */
+  .pdf-embed {
+    width: 100%;
+    height: 500px;
+    border: 1px solid var(--border);
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 1;
+    background: var(--surface2);
+  }
+  .pdf-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--cyan);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    cursor: none;
+    text-transform: uppercase;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+  .pdf-toggle-btn:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+  .pdf-container { display: none; position: relative; z-index: 1; }
+  .pdf-container.open { display: block; }
+
+  /* Leadership */
+  #leadership { background: var(--bg); }
+  .leadership-intro {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin-bottom: 4rem;
+    border-left: 2px solid var(--gold);
+    padding-left: 1.5rem;
+  }
+  .leadership-items {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .leadership-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+    overflow: hidden;
+  }
+  .leadership-item::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .leadership-item:hover { border-color: rgba(201,168,76,0.4); transform: translateX(6px); }
+  .leadership-item:hover::before { transform: scaleX(1); }
+  .leadership-icon-wrap {
+    width: 56px; height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .leadership-content h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .leadership-content p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+  .leadership-content .badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    background: var(--cyan-dim);
+    border: 1px solid rgba(78,205,196,0.3);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--cyan);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.8rem;
+  }
+
+  /* Contact */
+  #contact { background: var(--surface); }
+  .contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .contact-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+  .contact-info p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: none;
+    transition: color 0.3s;
+    padding: 0.8rem;
+    border: 1px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .contact-link:hover { color: var(--gold); border-color: var(--border); }
+  .contact-link-icon {
+    width: 40px; height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gold-dim);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .contact-stat {
+    padding: 2rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* Footer */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+  }
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* ── Hamburger menu ── */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    z-index: 200;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--gold);
+    transition: transform 0.3s, opacity 0.3s;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── Tablet ── */
+  @media (max-width: 1024px) {
+    .hero-grid { gap: 2.5rem; }
+    .section-wrapper { padding: 5rem 3rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    /* Disable custom cursor on touch */
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+    .btn-primary, .btn-outline { cursor: pointer; }
+
+    /* Nav */
+    nav {
+      padding: 1rem 1.5rem;
+      background: rgba(6,8,16,0.98);
+    }
+    .hamburger { display: flex; }
+    .nav-links {
+      position: fixed;
+      inset: 0;
+      background: rgba(6,8,16,0.98);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      z-index: 150;
+    }
+    .nav-links.open { transform: translateX(0); }
+    .nav-links a { font-size: 1.1rem; letter-spacing: 0.15em; }
+
+    /* Hero */
+    #hero {
+      padding: 7rem 1.5rem 3rem;
+      min-height: 100svh;
+    }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      text-align: center;
+    }
+    .hero-visual { order: -1; }
+    .hero-photo-frame { width: 200px; height: 250px; margin: 0 auto; }
+    .hero-badge {
+      bottom: -14px; right: -10px;
+      padding: 0.7rem 0.9rem;
+    }
+    .orbit-ring:nth-child(1) { width: 300px; height: 300px; top: -50px; left: -50px; }
+    .orbit-ring:nth-child(2) { width: 240px; height: 240px; top: -20px; left: -20px; }
+    .hero-label { font-size: 0.65rem; }
+    .hero-name { font-size: clamp(2.2rem, 10vw, 3.5rem); }
+    .hero-title { font-size: 0.75rem; letter-spacing: 0.08em; }
+    .hero-desc { font-size: 0.9rem; margin: 0 auto 2rem; }
+    .hero-ctas { justify-content: center; }
+    .btn-primary, .btn-outline {
+      padding: 0.8rem 1.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* Sections */
+    .section-wrapper { padding: 3.5rem 1.5rem; }
+    .section-title { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+    .section-header { gap: 1rem; margin-bottom: 2.5rem; }
+    .section-line { display: none; }
+
+    /* About */
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .skills-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .skill-tag { font-size: 0.7rem; padding: 0.6rem 0.8rem; }
+
+    /* Achievement */
+    .achievement-card {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .achievement-icon { font-size: 3.5rem; }
+    .achievement-content h3 { font-size: 1.5rem; }
+    .achievement-content p { font-size: 0.88rem; }
+
+    /* Projects */
+    .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .project-card { padding: 1.5rem; }
+    .project-title { font-size: 1.1rem; }
+    .pdf-embed { height: 320px; }
+
+    /* Leadership */
+    .leadership-intro { font-size: 0.95rem; }
+    .leadership-item {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+    .leadership-icon-wrap { width: 44px; height: 44px; font-size: 1.2rem; }
+    .leadership-content h4 { font-size: 1rem; }
+    .leadership-content p { font-size: 0.85rem; }
+
+    /* Contact */
+    .contact-wrapper { grid-template-columns: 1fr; gap: 2.5rem; }
+    .contact-info h3 { font-size: 1.4rem; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .stat-value { font-size: 2.2rem; }
+
+    /* Footer */
+    footer {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .hero-name { font-size: 2rem; }
+    .hero-photo-frame { width: 170px; height: 210px; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .hero-ctas { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="stars"></div>
+
+<nav>
+  <div class="nav-logo">PS</div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#achievement">Achievement</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#leadership">Leadership</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="hero-label">— AI/ML Engineer & Youth Icon</div>
+      <h1 class="hero-name">
+        Pushpendra
+        <em>Singh</em>
+      </h1>
+      <div class="hero-title">Rajpurohit · Balotra, Rajasthan</div>
+      <p class="hero-desc">Aspiring AI/ML Engineer building intelligent systems — from deep learning intrusion detection to NLP-powered semantic search and astronomical object classification.</p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn-primary">View Projects</a>
+        <a href="#contact" class="btn-outline">Get in Touch</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      <div class="orbit-ring"></div>
+      <div class="hero-photo-frame">
+        <img src="/mnt/user-data/uploads/1778927432246_IMG_5264.jpeg" alt="Pushpendra Singh" class="hero-photo">
+        <div class="hero-badge">
+          <span class="badge-title">Youth Icon</span>
+          <span class="badge-title">of Rajasthan</span>
+          <span class="badge-year">2026–27</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-wrapper">
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">About Me</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm a <strong>B.Tech CSE student</strong> at Central University of Rajasthan, graduating in 2026, with a passion for building AI systems that solve real-world problems. My work spans machine learning, deep learning, and NLP — where I transform complex data into intelligent insights.</p>
+        <p>Beyond code, I am a recognized <strong>Youth Icon of Rajasthan</strong>, an NSS President, and a participant in national-level youth governance dialogues — driven by a belief that technology and leadership go hand in hand.</p>
+        <p>I bring strong problem-solving instincts, a drive for continuous learning, and hands-on experience from end-to-end project development in AI/ML and cybersecurity.</p>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div style="font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.2rem;">Technical Skills</div>
+        <div class="skills-grid">
+          <div class="skill-tag">AI/ML Algorithms</div>
+          <div class="skill-tag">Deep Learning</div>
+          <div class="skill-tag">NLP / BERT</div>
+          <div class="skill-tag">Python</div>
+          <div class="skill-tag">TensorFlow</div>
+          <div class="skill-tag">Scikit-learn</div>
+          <div class="skill-tag">Java</div>
+          <div class="skill-tag">Web Development</div>
+          <div class="skill-tag">Cybersecurity</div>
+          <div class="skill-tag">Data Analysis</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENT -->
+<section id="achievement">
+  <div class="section-wrapper">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Achievement</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">🏆</div>
+      <div class="achievement-content">
+        <h3>Youth Icon of Rajasthan</h3>
+        <div class="year">2026 — 2027 · Rajasthan Youth Board</div>
+        <p>Recognized at the state level for exemplary leadership, public speaking, and impactful social initiatives. Honoured with a ₹1 Lakh cash prize, trophy, and certificate by the Rajasthan Youth Board — presented at Sawai Mansingh Stadium, Jaipur, as part of the Jai Ho Rajasthan programme.</p>
+      </div>
+    </div>
+    <div class="achievement-award-photo reveal">
+      <img src="/mnt/user-data/uploads/Password_new.jpeg" alt="Youth Icon Award Ceremony — Jai Ho Rajasthan">
+      <p class="award-caption">Award ceremony · Sawai Mansingh Stadium · Jai Ho Rajasthan Programme</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-wrapper">
+    <div class="section-header reveal">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+
+      <!-- Project 1: ML Classification -->
+      <div class="project-card reveal">
+        <div class="project-number">PROJECT / 01</div>
+        <h3 class="project-title">AI-Based Astronomical Object Classification</h3>
+        <div class="project-period">Mar 2026 — Jun 2026 · Major Dissertation</div>
+        <p class="project-desc">A machine learning model for accurate classification and prediction of celestial bodies using astronomical datasets. Performed data preprocessing, feature extraction, and comparative algorithm analysis for improved accuracy.</p>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">ML Algorithms</span>
+          <span class="project-tag">Supervised Learning</span>
+          <span class="project-tag">Feature Engineering</span>
+        </div>
+        <button class="pdf-toggle-btn" onclick="togglePDF(this)">
+          <span>📄</span> View Project Report
+        </button>
+        <div class="pdf-container">
+          <iframe class="pdf-embed" src="/mnt/user-data/uploads/Front_Report_Page.pdf" title="Project Report — Astronomical Object Classification"></iframe>
+        </div>
+      </div>
+
+      <!-- Project 2: NLP Search -->
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-number">PROJECT / 02</div>
+        <h3 class="project-title">NLP Based Search Optimization</h3>
+        <div class="project-period">Jan 2026 — Mar 2026</div>
+        <p class="project-desc">Built a BERT-based semantic search system that improves contextual understanding and retrieval accuracy. Implemented transformer embeddings for semantic similarity, significantly enhancing search ranking and information retrieval efficiency.</p>
+        <div class="project-tags">
+          <span class="project-tag">BERT</span>
+          <span class="project-tag">NLP</span>
+          <span class="project-tag">Transformers</span>
+          <span class="project-tag">Deep Learning</span>
+          <span class="project-tag">Python</span>
+        </div>
+      </div>
+
+      <!-- Project 3: IDS -->
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-number">PROJECT / 03</div>
+        <h3 class="project-title">Intrusion Detection System</h3>
+        <div class="project-period">Jan 2025 — Mar 2025</div>
+        <p class="project-desc">Designed a deep learning-based IDS using Sparse Autoencoders for anomaly detection. Trained and evaluated models on network traffic data to identify malicious activities — reducing false positive rates through feature optimization.</p>
+        <div class="project-tags">
+          <span class="project-tag">Deep Learning</span>
+          <span class="project-tag">Autoencoders</span>
+          <span class="project-tag">Cybersecurity</span>
+          <span class="project-tag">TensorFlow</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="section-wrapper">
+    <div class="section-header reveal">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Leadership</h2>
+      <div class="section-line"></div>
+    </div>
+    <p class="leadership-intro reveal">
+      Recognized as a Youth Icon for leadership, public speaking, and social impact initiatives — bridging technology, governance, and community through action.
+    </p>
+    <div class="leadership-items">
+
+      <div class="leadership-item reveal">
+        <div class="leadership-icon-wrap">🏅</div>
+        <div class="leadership-content">
+          <span class="badge">State Recognition · 2026–27</span>
+          <h4>Youth Icon of Rajasthan</h4>
+          <p>Awarded by the Rajasthan Youth Board for exemplary leadership, public speaking, and sustained social impact initiatives. Honoured at Sawai Mansingh Stadium, Jaipur, in front of thousands, receiving the ₹1 Lakh state prize and certificate of excellence.</p>
+        </div>
+      </div>
+
+      <div class="leadership-item reveal reveal-delay-1">
+        <div class="leadership-icon-wrap">🇮🇳</div>
+        <div class="leadership-content">
+          <span class="badge">National Programme · 2025–2026</span>
+          <h4>Viksit Bharat Young Leaders Dialogue (VBYLD)</h4>
+          <p>Selected as a participant in VBYLD 2025–2026, representing youth perspectives on national development initiatives. Engaged directly in dialogue on India's Viksit Bharat vision, contributing ideas on policy, technology, and youth empowerment at a national forum.</p>
+        </div>
+      </div>
+
+      <div class="leadership-item reveal reveal-delay-2">
+        <div class="leadership-icon-wrap">🏛️</div>
+        <div class="leadership-content">
+          <span class="badge">Governance Interaction</span>
+          <h4>Budget Session — Chief Minister Interaction</h4>
+          <p>Participated in a Budget Session interaction with the Chief Minister, engaging in discussions on policy, governance, and youth-driven development ideas. Contributed perspectives on education, technology, and inclusive growth for Rajasthan's next generation.</p>
+        </div>
+      </div>
+
+      <div class="leadership-item reveal reveal-delay-3">
+        <div class="leadership-icon-wrap">🌱</div>
+        <div class="leadership-content">
+          <span class="badge">Ministry of Youth Affairs & Sports · 2022–2025</span>
+          <h4>NSS President — National Service Scheme</h4>
+          <p>Served as NSS President, leading environmental campaigns, community service programmes, and student volunteer initiatives across campus activities. Organized cleanliness drives and sustainability awareness campaigns, impacting hundreds of students and community members over three years.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-wrapper">
+    <div class="section-header reveal">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Contact</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-wrapper">
+      <div class="contact-info reveal">
+        <h3>Let's build something together.</h3>
+        <p>Open to AI/ML engineering roles, research collaborations, and speaking opportunities. Based in Balotra, Rajasthan — available remotely or on-site.</p>
+        <div class="contact-links">
+          <a href="tel:+917976526212" class="contact-link">
+            <div class="contact-link-icon">📞</div>
+            <span>+91 79765 26212</span>
+          </a>
+          <a href="mailto:singpushpendra613@gmail.com" class="contact-link">
+            <div class="contact-link-icon">✉️</div>
+            <span>singpushpendra613@gmail.com</span>
+          </a>
+          <a href="https://www.linkedin.com/in/pushpendra-singh-rajpurohit-3b5aa626b" target="_blank" class="contact-link">
+            <div class="contact-link-icon">🔗</div>
+            <span>LinkedIn Profile</span>
+          </a>
+          <a href="#" class="contact-link">
+            <div class="contact-link-icon">📍</div>
+            <span>Balotra, Rajasthan, India</span>
+          </a>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="stats-grid">
+          <div class="contact-stat">
+            <span class="stat-value">3</span>
+            <span class="stat-label">AI/ML Projects</span>
+          </div>
+          <div class="contact-stat">
+            <span class="stat-value">1L</span>
+            <span class="stat-label">Prize Won</span>
+          </div>
+          <div class="contact-stat">
+            <span class="stat-value">3</span>
+            <span class="stat-label">Years NSS</span>
+          </div>
+          <div class="contact-stat">
+            <span class="stat-value">2026</span>
+            <span class="stat-label">Graduating</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Pushpendra Singh Rajpurohit</p>
+  <p>AI/ML Engineer · Youth Icon of Rajasthan</p>
+</footer>
+
+<script>
+  // Stars
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 150; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${Math.random()*4+2}s;
+      --delay:${Math.random()*4}s;
+      --op:${Math.random()*0.6+0.2};
+    `;
+    stars.appendChild(s);
+  }
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    cursorRing.style.left = mx + 'px';
+    cursorRing.style.top = my + 'px';
+  });
+  document.querySelectorAll('a, button, .skill-tag, .project-card, .leadership-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      cursorRing.style.width = '60px';
+      cursorRing.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      cursorRing.style.width = '40px';
+      cursorRing.style.height = '40px';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  reveals.forEach(r => observer.observe(r));
+
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      navLinks.classList.remove('open');
+    });
+  });
+
+  // PDF toggle
+  function togglePDF(btn) {
+    const container = btn.nextElementSibling;
+    const isOpen = container.classList.toggle('open');
+    btn.innerHTML = isOpen ? '<span>📄</span> Hide Report' : '<span>📄</span> View Project Report';
+  }
+</script>
+</body>
+</html>
