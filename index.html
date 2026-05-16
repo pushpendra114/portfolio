@@ -247,19 +247,23 @@
   .hero-photo-frame::before {
     content: '';
     position: absolute;
+    
     inset: -2px;
     background: linear-gradient(135deg, var(--gold), transparent, var(--cyan));
     clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
     z-index: 0;
   }
   .hero-photo {
-    position: absolute;
-    inset: 2px;
-    object-fit: cover;
-    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
-    z-index: 1;
-    filter: grayscale(20%);
-  }
+  position: absolute;
+  inset: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  object-fit: cover;
+  object-position: center top;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+  z-index: 1;
+  filter: grayscale(20%);
+}
   .hero-badge {
     position: absolute;
     bottom: -20px;
